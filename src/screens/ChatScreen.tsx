@@ -5,21 +5,19 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList, TextInput, TouchableOpa
 import { useRoute } from '@react-navigation/native';
 import { auth, db, storage } from './firebaseConfig'; // Firebase Storageをインポート
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; // Storageの関数をインポート
-import * as DocumentPicker from 'expo-document-picker'; // Expo DocumentPickerをインポート (ネイティブ用)
-import * as ImagePicker from 'expo-image-picker'; // Expo ImagePickerをインポート (ネイティブ用)
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; 
+import * as DocumentPicker from 'expo-document-picker'; 
+import * as ImagePicker from 'expo-image-picker'; 
 
-
-// メッセージデータの型定義を拡張
 interface Message {
   id: string; // FirestoreドキュメントID
   senderId: string;
   senderName: string;
-  type: 'text' | 'image' | 'document'; // メッセージタイプを追加
-  text?: string; // テキストメッセージの場合
-  imageUrl?: string; // 画像メッセージの場合
-  fileUrl?: string; // ファイルメッセージの場合
-  fileName?: string; // ファイルメッセージの場合 (ファイル名)
+  type: 'text' | 'image' | 'document'; 
+  text?: string; 
+  imageUrl?: string; 
+  fileUrl?: string; 
+  fileName?: string; 
   createdAt: Timestamp;
 }
 
@@ -38,11 +36,10 @@ export default function ChatScreen() {
   const [newMessage, setNewMessage] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [uploading, setUploading] = useState(false); // アップロード中かどうか
-  const [uploadProgress, setUploadProgress] = useState(0); // アップロード進捗
+  const [uploading, setUploading] = useState(false); 
+  const [uploadProgress, setUploadProgress] = useState(0); 
   const flatListRef = useRef<FlatList>(null);
 
-  // Web用のファイル入力参照
   const imageInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -83,7 +80,6 @@ export default function ChatScreen() {
     };
   }, [chatId]);
 
-  // メッセージ送信処理
   const handleSendMessage = async () => {
     if (newMessage.trim() === '' || !currentUser) {
       return;
@@ -94,7 +90,7 @@ export default function ChatScreen() {
       await addDoc(messagesRef, {
         senderId: currentUser.uid,
         senderName: currentUser.email ? currentUser.email.split('@')[0] : '匿名ユーザー',
-        type: 'text', // テキストメッセージとして保存
+        type: 'text', 
         text: newMessage,
         createdAt: serverTimestamp(),
       });
@@ -108,7 +104,6 @@ export default function ChatScreen() {
     }
   };
 
-  // ビデオ通話を開始する
   const handleStartVideoCall = () => {
     const videoCallUrl = `https://meet.google.com/new`; // または `https://zoom.us/start/videomeeting`
     Linking.openURL(videoCallUrl).catch(err => {
@@ -117,7 +112,6 @@ export default function ChatScreen() {
     });
   };
 
-  // ファイルアップロード処理 (画像/ドキュメント共通)
   const uploadFile = async (uri: string, fileType: 'image' | 'document', fileName: string) => {
     if (!currentUser) {
       Alert.alert("エラー", "ファイルを送信するにはログインが必要です。");
@@ -131,7 +125,7 @@ export default function ChatScreen() {
     const fileRef = ref(storage, storageRefPath);
 
     try {
-      // Fetch the file as a Blob for upload
+
       const response = await fetch(uri);
       const blob = await response.blob();
 
@@ -173,13 +167,12 @@ export default function ChatScreen() {
     }
   };
 
-  // 画像選択ハンドラ
   const handlePickImage = async () => {
     if (Platform.OS === 'web') {
-      // Webの場合、隠しinput要素をクリック
+
       imageInputRef.current?.click();
     } else {
-      // ネイティブの場合、expo-image-pickerを使用
+
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('パーミッションが必要です', '画像を選択するにはメディアライブラリのパーミッションが必要です。');
@@ -200,15 +193,14 @@ export default function ChatScreen() {
     }
   };
 
-  // ファイル選択ハンドラ
   const handlePickFile = async () => {
     if (Platform.OS === 'web') {
-      // Webの場合、隠しinput要素をクリック
+
       fileInputRef.current?.click();
     } else {
-      // ネイティブの場合、expo-document-pickerを使用
+
       let result = await DocumentPicker.getDocumentAsync({
-        type: '*/*', // すべてのファイルタイプを許可
+        type: '*/*', 
         copyToCacheDirectory: false,
       });
 
@@ -220,17 +212,15 @@ export default function ChatScreen() {
     }
   };
 
-  // Web用のファイル入力変更ハンドラ
   const handleWebFileChange = (event: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'document') => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      const uri = URL.createObjectURL(file); // Blob URLを作成
+      const uri = URL.createObjectURL(file); 
       uploadFile(uri, type, file.name);
     }
   };
 
 
-  // 各メッセージアイテムのレンダリング
   const renderMessageItem = ({ item }: { item: Message }) => {
     const isMyMessage = item.senderId === (currentUser ? currentUser.uid : '');
     const messageTime = item.createdAt instanceof Timestamp ? item.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '送信中...';
@@ -520,3 +510,4 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
 });
+
