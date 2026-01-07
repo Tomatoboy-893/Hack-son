@@ -64,7 +64,6 @@ export default function LoginScreen() {
         setError('');
         setSuccessMessage('');
         if (!email) {
-            // --- ここを変更しました ---
             setError('パスワードを再設定するには、まずメールアドレスを入力してください。');
             return;
         }
@@ -201,4 +200,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
     },
+
 });
