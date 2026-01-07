@@ -6,7 +6,6 @@ import { auth, db } from './firebaseConfig';
 import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, writeBatch, getDocs, deleteDoc } from 'firebase/firestore'; // deleteDocもインポート
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-// React Navigationのルートとパラメータの型定義
 type RootStackParamList = {
   Login: undefined;
   Chat: {
@@ -17,12 +16,11 @@ type RootStackParamList = {
     participantId: string;
     participantName: string;
   };
-  // 他のスクリーンがあればここに追加
+
 };
 
-// 予約データの型定義
 interface Booking {
-  id: string; // ドキュメントID
+  id: string; 
   skillId: string;
   skillTitle: string;
   skillPrice: number;
@@ -30,9 +28,9 @@ interface Booking {
   instructorName: string;
   studentId: string;
   studentEmail: string;
-  bookingDateTime: string; // ISO文字列
-  bookingEndTime: string; // ISO文字列
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled'; // 予約ステータス
+  bookingDateTime: string;
+  bookingEndTime: string;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   createdAt: string;
 }
 
@@ -57,7 +55,6 @@ export default function MyBookingsScreen() {
     let studentUnsubscribe: () => void;
     let instructorUnsubscribe: () => void;
 
-    // 予約者としての予約を監視
     const bookingsCollectionRef = collection(db, 'bookings');
     const qStudent = query(
       bookingsCollectionRef,
@@ -70,7 +67,7 @@ export default function MyBookingsScreen() {
       snapshot.forEach((doc) => {
         studentBookings.push({ id: doc.id, ...doc.data() as Omit<Booking, 'id'> });
       });
-      // 講師としての予約と結合 (重複を排除)
+      
       allBookings = [...studentBookings, ...allBookings.filter(b => b.studentId !== user.uid)];
       setMyBookings(allBookings.sort((a, b) => new Date(a.bookingDateTime).getTime() - new Date(b.bookingDateTime).getTime()));
       setIsLoading(false);
@@ -80,7 +77,6 @@ export default function MyBookingsScreen() {
       setIsLoading(false);
     });
 
-    // 講師としての予約を監視
     const qInstructor = query(
       bookingsCollectionRef,
       where('instructorId', '==', user.uid),
@@ -92,7 +88,7 @@ export default function MyBookingsScreen() {
       snapshot.forEach((doc) => {
         instructorBookings.push({ id: doc.id, ...doc.data() as Omit<Booking, 'id'> });
       });
-      // 学生としての予約と結合 (重複を排除)
+
       allBookings = [...instructorBookings, ...allBookings.filter(b => b.instructorId !== user.uid)];
       setMyBookings(allBookings.sort((a, b) => new Date(a.bookingDateTime).getTime() - new Date(b.bookingDateTime).getTime()));
       setIsLoading(false);
@@ -108,7 +104,6 @@ export default function MyBookingsScreen() {
     }; 
   }, []);
 
-  // 予約を完了し、関連するチャット履歴を削除する関数を再構築
   const handleCompleteBooking = async (bookingId: string) => {
     Alert.alert(
       "予約を完了する",
@@ -118,9 +113,9 @@ export default function MyBookingsScreen() {
         {
           text: "完了する",
           onPress: async () => {
-            setIsProcessingBooking(true); // 処理中フラグを立てる
+            setIsProcessingBooking(true); 
             try {
-              const batch = writeBatch(db); // バッチ処理を開始
+              const batch = writeBatch(db); 
 
               // 1. チャットメッセージを削除
               const messagesRef = collection(db, 'chats', bookingId, 'messages');
@@ -134,7 +129,6 @@ export default function MyBookingsScreen() {
                 console.log(`チャットID ${bookingId} にメッセージはありませんでした。`);
               }
 
-              // 2. チャットドキュメント自体を削除
               const chatDocRef = doc(db, 'chats', bookingId);
               // チャットドキュメントが存在するか確認してから削除を試みる
               const chatDocSnapshot = await getDocs(query(collection(db, 'chats'), where('__name__', '==', bookingId)));
@@ -145,12 +139,10 @@ export default function MyBookingsScreen() {
                 console.log(`チャットドキュメント ${bookingId} は存在しませんでした。`);
               }
 
-              // 3. 予約ステータスを'completed'に更新
               const bookingRef = doc(db, 'bookings', bookingId);
               console.log(`予約 ${bookingId} のステータスを 'completed' に更新中...`);
               batch.update(bookingRef, { status: 'completed' });
 
-              // バッチをコミット
               await batch.commit();
               console.log("Firestoreバッチ処理が正常にコミットされました。");
 
@@ -174,7 +166,6 @@ export default function MyBookingsScreen() {
   };
 
 
-  // チャットを開始する関数
   const handleStartChat = (booking: Booking) => {
     // ChatScreenに予約情報と、チャット相手の情報を渡す
     const participantId = booking.instructorId === currentUserId ? booking.studentId : booking.instructorId;
@@ -202,7 +193,6 @@ export default function MyBookingsScreen() {
     );
   }
 
-  // 予約ステータスに基づいて適切なスタイルを返すヘルパー関数
   const getStatusStyle = (status: Booking['status']) => {
     // 'pending'の場合も'confirmed'のスタイルを適用
     if (status === 'pending' || status === 'confirmed') {
@@ -223,14 +213,10 @@ export default function MyBookingsScreen() {
     const bookingEnd = new Date(item.bookingEndTime);
     const now = new Date(); // 現在時刻を取得
 
-    // チャットボタンを表示する条件: 予約が保留中または確定済み
     const showChatButton = item.status === 'pending' || item.status === 'confirmed';
 
-    // 講義が終了し、完了できる条件
-    // 予約が確定済みまたは保留中で、かつ終了時刻が現在時刻を過ぎている場合
     const canBeCompleted = (item.status === 'confirmed' || item.status === 'pending') && now.getTime() > bookingEnd.getTime();
 
-    // 表示用のステータス文字列を決定
     let displayStatus = '';
     if (item.status === 'pending' || item.status === 'confirmed') {
       displayStatus = '確定済み'; // 'pending'も'確定済み'として表示
@@ -441,3 +427,4 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
