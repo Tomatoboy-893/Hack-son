@@ -14,7 +14,6 @@ export default function ProfileScreen() {
   const [isLoading, setIsLoading] = useState(true); 
   const [isEditing, setIsEditing] = useState(false); 
 
-  // プロフィールデータを読み込む関数
   const fetchUserProfile = async () => {
     setIsLoading(true);
     const user = auth.currentUser;
@@ -49,7 +48,6 @@ export default function ProfileScreen() {
     fetchUserProfile(); 
   }, []);
 
-  // プロフィールを保存する関数
   const handleSaveProfile = async () => {
     const user = auth.currentUser;
     if (!user) {
@@ -79,19 +77,15 @@ export default function ProfileScreen() {
     }
   };
 
-  // 編集ボタンを押したときのハンドラー
   const handleEditPress = () => {
     setIsEditing(true);
   };
 
-  // キャンセルボタンを押したときのハンドラー
   const handleCancelPress = () => {
     setIsEditing(false);
     fetchUserProfile(); // 元のプロフィールデータを再読み込み
   };
 
-  // ★変更: 開催日程設定画面へ遷移するハンドラーは削除
-  // handleGoToAvailabilityは削除されます
 
   if (isLoading) {
     return (
@@ -275,3 +269,4 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 });
+
