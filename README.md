@@ -79,7 +79,7 @@ src/
 │   ├── InstructorAvailabilityScreen.tsx<br>
 │   └── ...<br
 ├── config/         # Firebase設定 (firebaseConfig.ts)<br>
-├── hooks/          # カスタムフック<br
+├── hooks/          # カスタムフック<br>
 └── types/          # TypeScript 型定義<br>
 
 
