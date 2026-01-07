@@ -13,7 +13,6 @@ export default function ProfileRegistrationScreen() {
   const [isLoading, setIsLoading] = useState(true); 
   const [currentUserId, setCurrentUserId] = useState<string | null>(null); 
 
-  // プロフィールデータを読み込む関数
   const fetchUserProfile = async () => {
     setIsLoading(true);
     const user = auth.currentUser;
@@ -48,7 +47,6 @@ export default function ProfileRegistrationScreen() {
     fetchUserProfile(); 
   }, []);
 
-  // プロフィールを保存する関数
   const handleSaveProfile = async () => {
     const user = auth.currentUser;
     if (!user) {
@@ -194,3 +192,4 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 });
+
