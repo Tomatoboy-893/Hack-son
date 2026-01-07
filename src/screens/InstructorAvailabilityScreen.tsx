@@ -164,7 +164,7 @@ export default function InstructorAvailabilityScreen() {
       }
     } catch (error) {
       console.error("開催日程追加エラー:", error);
-      if (error.code) { // Firebaseエラーコードとメッセージをログ
+      if (error.code) { 
         console.error("Firebase Error Code (追加):", error.code);
         console.error("Firebase Error Message (追加):", error.message);
       }
@@ -503,3 +503,4 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 });
+
