@@ -7,7 +7,7 @@ import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestor
 import { useNavigation } from '@react-navigation/native';
 
 interface Skill {
-  id: string; // FirestoreのドキュメントID
+  id: string; 
   title: string;
   description: string;
   category: string;
@@ -28,17 +28,16 @@ export default function MySkillsManagementScreen() {
     if (!user) {
       Alert.alert("エラー", "ログインしていません。");
       setIsLoading(false);
-      navigation.navigate('Login' as never); // ログイン画面に戻す
+      navigation.navigate('Login' as never); 
       return;
     }
     setCurrentUserId(user.uid);
 
-    // 自分のスキルのみをリアルタイムで取得
     const skillsCollectionRef = collection(db, 'skills');
     const q = query(
       skillsCollectionRef, 
-      where('instructorId', '==', user.uid), // 自分のUIDと一致するスキルのみ
-      orderBy('createdAt', 'desc') // 新しいものから表示
+      where('instructorId', '==', user.uid), 
+      orderBy('createdAt', 'desc') 
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -57,7 +56,6 @@ export default function MySkillsManagementScreen() {
     return () => unsubscribe(); // リスナーのクリーンアップ
   }, []);
 
-  // 開催日程管理画面へ遷移するハンドラー
   const handleManageAvailability = (skillId: string, skillTitle: string) => {
     navigation.navigate('InstructorAvailability', { skillId, skillTitle }); // skillIdとskillTitleを渡す
   };
@@ -175,3 +173,4 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 });
+
