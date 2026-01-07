@@ -1,4 +1,4 @@
-# Hack-son
+
 一芸入魂 (Ichigei Nyukon)
 
 「才能、解き放つ。」 あなたの「一芸」が誰かの「学び」になる。オンライン特化型のスキルシェアリング・プラットフォーム。
@@ -70,17 +70,17 @@ Expo ImagePicker, DocumentPicker
 📂 ディレクトリ構造
 
 src/
-├── components/     # 再利用可能な共通UIコンポーネント
-├── screens/        # 各画面コンポーネント
-│   ├── LoginScreen.tsx
-│   ├── SkillListScreen.tsx
-│   ├── BookingScreen.tsx
-│   ├── ChatScreen.tsx
-│   ├── InstructorAvailabilityScreen.tsx
-│   └── ...
-├── config/         # Firebase設定 (firebaseConfig.ts)
-├── hooks/          # カスタムフック
-└── types/          # TypeScript 型定義
+├── components/     # 再利用可能な共通UIコンポーネント<br>
+├── screens/        # 各画面コンポーネント<br>
+│   ├── LoginScreen.tsx<br>
+│   ├── SkillListScreen.tsx<br>
+│   ├── BookingScreen.tsx<br>
+│   ├── ChatScreen.tsx<br>
+│   ├── InstructorAvailabilityScreen.tsx<br>
+│   └── ...<br
+├── config/         # Firebase設定 (firebaseConfig.ts)<br>
+├── hooks/          # カスタムフック<br
+└── types/          # TypeScript 型定義<br>
 
 
 ⚙️ セットアップ・起動方法
