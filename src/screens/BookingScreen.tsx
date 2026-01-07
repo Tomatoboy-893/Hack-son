@@ -6,13 +6,11 @@ import { useRoute, useNavigation, NavigationProp } from '@react-navigation/nativ
 import { auth, db } from './firebaseConfig'; 
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, runTransaction } from 'firebase/firestore';
 
-// React Navigationのルートとパラメータの型定義
 type RootStackParamList = {
   Login: undefined;
-  // 必要に応じて他のルートもここに追加します
+
 };
 
-// 開催日程スロットの型定義
 interface AvailabilitySlot {
   id: string; 
   startTime: string; 
@@ -39,7 +37,6 @@ export default function BookingScreen() {
   const [isLoading, setIsLoading] = useState(true); 
   const [isBooking, setIsBooking] = useState(false); 
 
-  // 講師の利用可能なスロットをFirestoreから取得
   useEffect(() => {
     console.log("BookingScreen: useEffectが実行されました。");
     console.log("BookingScreen: 取得対象のskillId:", skillId);
@@ -104,7 +101,7 @@ export default function BookingScreen() {
       Alert.alert("エラー", "予約する日時を選択してください。");
       return;
     }
-    // 講師が自分自身を予約しようとしていないか確認
+
     if (user.uid === instructorId) {
       Alert.alert("エラー", "自分のスキルを予約することはできません。");
       return;
@@ -354,3 +351,4 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 });
+
