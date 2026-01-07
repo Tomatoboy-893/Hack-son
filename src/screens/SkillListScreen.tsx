@@ -80,7 +80,6 @@ export default function SkillListScreen() {
       );
     }
 
-    // ✨ 1. 小カテゴリの絞り込み条件をシンプルに変更
     if (selectedChildCategory) {
       currentFilteredSkills = currentFilteredSkills.filter(
         skill => skill.category === selectedChildCategory
@@ -117,10 +116,10 @@ export default function SkillListScreen() {
       setChildCategories([]);
     } else {
       setSelectedParentCategory(parent);
-      setSelectedChildCategory(null); // 親を変えたら子の選択はリセット
+      setSelectedChildCategory(null); 
       if (parent !== '全て') {
         const parentInfo = HIERARCHICAL_CATEGORIES.find(p => p.parent === parent);
-        // ✨ 2. 小カテゴリのリストから「全て」を削除
+   
         setChildCategories(parentInfo ? parentInfo.children : []);
       } else {
         setChildCategories([]);
@@ -150,7 +149,7 @@ export default function SkillListScreen() {
       if (type === 'parent') {
         handleSelectParentCategory(item);
       } else {
-        // ✨ 3. 同じ小カテゴリをタップしたら選択解除(nullに設定)する
+
         setSelectedChildCategory(prev => prev === item ? null : item);
       }
     };
@@ -366,4 +365,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+
 });
