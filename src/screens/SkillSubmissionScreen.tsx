@@ -7,7 +7,6 @@ import { auth, db } from './firebaseConfig';
 import { collection, addDoc, doc, getDoc, serverTimestamp } from 'firebase/firestore'; // serverTimestampを追加
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-// カテゴリをさらに拡充
 const HIERARCHICAL_CATEGORIES = [
   {
     parent: 'IT・テクノロジー',
@@ -43,14 +42,13 @@ export default function SkillSubmissionScreen() {
   const [duration, setDuration] = useState('');
   const [category, setCategory] = useState('');
 
-  // 開いている親カテゴリを管理するstate
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [instructorInfo, setInstructorInfo] = useState<{ uid: string; userName: string } | null>(null);
 
   useEffect(() => {
-    // 講師情報を取得するロジック
+  
     const fetchInstructorInfo = async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -128,7 +126,6 @@ export default function SkillSubmissionScreen() {
     }
   };
   
-  // アコーディオンを開閉する関数
   const toggleAccordion = (parentCategory: string) => {
     if (expandedCategory === parentCategory) {
       setExpandedCategory(null); // 同じものを再度タップしたら閉じる
@@ -262,3 +259,4 @@ const styles = StyleSheet.create({
   button: { width: '90%', padding: 15, borderRadius: 10, alignItems: 'center', backgroundColor: '#00796B', marginTop: 20 },
   buttonText: { color: '#FFFFFF', fontSize: 18, fontWeight: 'bold' },
 });
+
