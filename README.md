@@ -69,7 +69,7 @@ Expo ImagePicker, DocumentPicker
 
 📂 ディレクトリ構造
 
-src/
+src/<br>
 ├── components/     # 再利用可能な共通UIコンポーネント<br>
 ├── screens/        # 各画面コンポーネント<br>
 │   ├── LoginScreen.tsx<br>
